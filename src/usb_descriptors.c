@@ -131,10 +131,10 @@ uint8_t const * tud_descriptor_configuration_cb(uint8_t index)
 char const* string_desc_arr [] =
 {
   (const char[]) { 0x09, 0x04 }, // 0: is supported language is English (0x0409)
-  "TinySUMP",                     // 1: Manufacturer
-  "TinySUMP Device",              // 2: Product
-  "123456",                      // 3: Serials, should use chip ID
-  "TinySUMP CDC",                 // 4: CDC Interface
+  "Adafruit",                    // 1: Manufacturer
+  "Tiny Logic Friend",            // 2: Product
+  "TLF123456",                   // 3: Serials, should use chip ID
+  "TLF CDC",                     // 4: CDC Interface
 };
 
 static uint16_t _desc_str[32];
@@ -153,7 +153,10 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index)
   {
     // Convert ASCII string into UTF-16
 
-    if ( !(index < sizeof(string_desc_arr)/sizeof(string_desc_arr[0])) ) return NULL;
+    if ( !(index < sizeof(string_desc_arr)/sizeof(string_desc_arr[0])) ) {
+      asm("bkpt");
+      return NULL;
+    }
 
     const char* str = string_desc_arr[index];
 

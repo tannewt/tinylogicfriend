@@ -6,7 +6,8 @@ INC += \
 	$(TOP)/hw \
 
 # Example source
-EXAMPLE_SOURCE += $(wildcard src/*.c)
+EXAMPLE_SOURCE += $(wildcard src/*.c) $(wildcard src/mcu/$(VENDOR)/$(CHIP_FAMILY)/*.c)
 SRC_C += $(addprefix $(CURRENT_PATH)/, $(EXAMPLE_SOURCE))
 
 include lib/tinyusb/examples/rules.mk
+

@@ -23,13 +23,19 @@
  *
  */
 
- void logic_capture_init(void);
- void logic_capture_task(void);
+#include <stdint.h>
 
- struct _capture_channel {
+void logic_capture_init(void);
+void logic_capture_start(void);
+void logic_capture_stop(void);
+void logic_capture_task(void);
+
+void tlf_queue_sample(uint8_t* sample, uint32_t sample_len);
+
+typedef struct _capture_channel {
     uint32_t pin;
     uint8_t group;
     char* name;
- } typedef capture_channel_t;
+} capture_channel_t;
 
 extern capture_channel_t channel_list[];

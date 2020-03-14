@@ -62,11 +62,11 @@ int main(void)
   while (1)
   {
     tud_task(); // tinyusb device task
-    led_blinking_task();
     logic_capture_task();
 
     cdc_task();
   }
+  logic_capture_stop();
 
   return 0;
 }
@@ -129,9 +129,10 @@ void cdc_task(void)
         case 0x00: // Reset
           break;
         case 0x01: // Run
+          logic_capture_start();
           break;
         case 0x02: { // ID
-          const char id[] = "1ALS";
+          const char id[] = "TLF1";
           tud_cdc_write(id, 4);
           // tud_cdc_write_char('1');
           // tud_cdc_write_char('A');
@@ -175,7 +176,7 @@ void cdc_task(void)
           break;
         }
         default:
-          asm("bkpt");
+          //asm("bkpt");
           break;
       }
 
@@ -186,9 +187,16 @@ void cdc_task(void)
       //   if ( buf[i] == '\r' ) tud_cdc_write_char('\n');
       // }
 
-      tud_cdc_write_flush();
     }
+    tud_cdc_write_flush();
   }
+}
+
+void tlf_queue_sample(uint8_t* sample, uint32_t sample_len) {
+    tud_cdc_write(sample, sample_len);
+    // if (sent == 0) {
+    //   asm("bkpt");
+    // }
 }
 
 // Invoked when cdc when line state changed e.g connected/disconnected
