@@ -11,3 +11,7 @@ SRC_C += $(addprefix $(CURRENT_PATH)/, $(EXAMPLE_SOURCE))
 
 include lib/tinyusb/examples/rules.mk
 
+$(BUILD)/firmware.uf2: $(BUILD)/firmware.bin
+	$(STEPECHO) "Create $@"
+	$(Q)$(PYTHON3) $(TOP)/tools/uf2/utils/uf2conv.py -b $(BOOTLOADER_SIZE) -c -o $@ $^
+

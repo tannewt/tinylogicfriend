@@ -59,12 +59,28 @@ int main(void)
   tusb_init();
   logic_capture_init();
 
+  static uint32_t start_ms = 0;
+  static bool led_state = false;
+  board_led_write(led_state);
+  led_state = 1 - led_state; // toggle
+
+
   while (1)
   {
     tud_task(); // tinyusb device task
     logic_capture_task();
 
     cdc_task();
+
+
+    // Blink every interval ms
+    if ( (board_millis() - start_ms) > blink_interval_ms) { // time has elapsed
+    //if ( (board_millis() - start_ms) > blink_interval_ms) { // time has elapsed
+      start_ms += blink_interval_ms;
+
+      board_led_write(led_state);
+      led_state = 1 - led_state; // toggle
+    }
   }
   logic_capture_stop();
 
