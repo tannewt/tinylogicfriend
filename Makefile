@@ -13,10 +13,26 @@ INC += \
 	$(TOP)/hw \
 	$(TOP)/lib/libscpi/inc \
 	$(TOP)/lib/libscpi/src
-# 	$(TOP)/src/mcu/microchip/samd
+# 	$(TOP)/src/mcu/microchip/samd51
 
 # 	$(TOP)/src/mcu/$(VENDOR)/$(CHIP_FAMILY) \
 # 	$(TOP)/lib/tinyusb/hw/
+
+# # Main code: TinyLogicFriend
+SRC_C += $(wildcard src/*.c)
+
+$(info SRC_C 1: $(SRC_C))
+
+SRC_C += $(wildcard src/mcu/microchip/samd51/*.c)
+
+$(info SRC_C 1b: $(SRC_C))
+
+# # scpi-parser
+SRC_C += $(wildcard $(TOP)/lib/libscpi/src/*.c)
+
+# # tinyUSB
+# SRC_C += $(wildcard $(TOP)/lib/tinyusb/src/*.c)
+
 
 
 # Example source
