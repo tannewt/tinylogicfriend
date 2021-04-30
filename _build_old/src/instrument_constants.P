@@ -1,3 +1,0 @@
-_build/build-itsybitsy_m4/obj/../../src/instrument_constants.o: \
- /Users/margaret/Github/tinylogicfriend/lib/tinyusb/../../src/instrument_constants.c
- /Users/margaret/Github/tinylogicfriend/lib/tinyusb/../../src/instrument_constants.c :
