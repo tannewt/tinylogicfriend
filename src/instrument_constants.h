@@ -1,0 +1,1 @@
+extern const char * channel_state_name[];
