@@ -24,12 +24,12 @@ const char * channel_names[] = { // Channel names **must** match the board label
 	"TX",  // PA17 -  2  verified
 	"D7",  // PA18 -  3  verified
 	"D9",  // PA19 -  4  verified
-	"A4",  // PA04 -  5
-	"A1",  // PA05 -  6
-	"A5",  // PA06 -  7
-	"MISO",// PB23 -  8
-	"A2",  // PB08 -  9
-	"A3",  // PB09 - 10
+	"D10",  // PA04 -  5
+	"D11",  // PA05 -  6
+	"D13",  // PA06 -  7
+	"D12",// PB23 -  8
+	"n/c",  // PB08 -  9
+	"n/c",  // PB09 - 10
 	"n/c", // n/c  - 11
 	"n/c", // n/c  - 12
 	"SDA", // PA12 - 13

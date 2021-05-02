@@ -145,25 +145,22 @@ void logic_capture_start(void) {
                                   PORT_WRCONFIG_WRPMUX |
                                   PORT_WRCONFIG_PMUX(0) |
                                   PORT_WRCONFIG_PMUXEN |
-                                  // 0x0002;
-                                  // 0x0003; // try with pins PA16 and PA17
-                                  0x000F; // try with 16 pins (?)  which pins?
+                                  0x00FF ; // use pins 16-23
 
-    // for PA00 to PA15
+    // Setup pins PA08 to PA15
     PORT->Group[0].WRCONFIG.reg = PORT_WRCONFIG_WRPINCFG |
                                   PORT_WRCONFIG_WRPMUX |
-                                  PORT_WRCONFIG_PMUX(1) | // does this setup a different MUX?
+                                  PORT_WRCONFIG_PMUX(0) | // does this setup a different MUX?
                                   PORT_WRCONFIG_PMUXEN |
-                                  // 0x0002;
-                                  // 0x0003; // try with pins PA16 and PA17
-                                  0x000F; // try with 16 pins (?)  which pins?
+
+                                  0xFF00; // use pins 8-15
 
 
-    EIC->ASYNCH.reg = 0xff;
+    EIC->ASYNCH.reg = 0xffff;
     EIC->CONFIG[0].reg = 0x33333333;
     EIC->CONFIG[1].reg = 0x33333333;
     // EIC->INTENSET.reg = 0x0002;
-    EIC->INTENSET.reg = 0x0003;  // try with pins PA16 and PA17 as interrupts
+    EIC->INTENSET.reg = 0xFFFF;  // Respond to 16 EIC inputs
     EIC->DEBOUNCEN.reg = 0xffff;
     // EIC->DEBOUNCEN.reg = 0x0002;
 
