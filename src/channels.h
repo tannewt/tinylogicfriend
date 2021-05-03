@@ -12,6 +12,7 @@ extern uint32_t sample_rate_step; // step size beteween minimum and maximum samp
 extern uint32_t sample_rate; // Sampling rate
 
 extern uint32_t samples; // Number of samples to be measured
+extern uint32_t max_samples; // Maximum number of samples, will be set by buffer size
 
 // for flow control with measurements
 extern bool running;

@@ -8,7 +8,7 @@
 #include "bsp/board.h"
 #include "channels.h"
 
-uint16_t sample[2];
+// uint16_t sample[2];
 
 uint16_t timestamps[MEASURE_BUFFER_SIZE];
 uint16_t values[MEASURE_BUFFER_SIZE];

@@ -50,6 +50,8 @@
 #include "bsp/board.h"
 #include "usbtmc_app.h"
 
+#include "itsybitsy_m4.h"
+
 size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
     (void) context;
 

@@ -47,6 +47,8 @@
 #include "instrument_constants.h"
 #include "logic_capture.h"
 
+// #include "itsybitsy_m4.h"
+
 // static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 //     scpi_number_t param1, param2;
 //     char bf[15];
@@ -674,8 +676,8 @@ static scpi_result_t SAMPLES_Set(scpi_t * context) { // set the number of sample
     // convert `scpi_number_t param1` to `samples`
     samples = param1.content.value;
 
-    if (samples > MEASURE_BUFFER_SIZE) { // constrain number of samples to the size o the buffer
-        samples = MEASURE_BUFFER_SIZE;
+    if (samples > max_samples) { // constrain number of samples to the size of the buffer
+        samples = max_samples;
     }
 
     fprintf(stderr, "# of samples=%ld\r\n", samples);
@@ -689,6 +691,12 @@ static scpi_result_t SAMPLES_Get(scpi_t * context) { // Get the number of sample
     return SCPI_RES_OK;
 }
 
+// get the maximum possible number of samples that can be measured
+static scpi_result_t SAMPLES_Max_Get(scpi_t * context) { // Get the number of samples
+    SCPI_ResultUInt32(context, max_samples);
+    fprintf(stderr, "Max # of samples=%ld\r\n", max_samples);
+    return SCPI_RES_OK;
+}
 
 // send a data packet
 static scpi_result_t DATA_Request(scpi_t * context) {
@@ -812,6 +820,7 @@ const scpi_command_t scpi_commands[] = {
     // Set/get number of samples
     {.pattern = "SAMPLes", .callback = SAMPLES_Set,},
     {.pattern = "SAMPLes?", .callback = SAMPLES_Get,},
+    {.pattern = "SAMPLes:MAX?", .callback = SAMPLES_Max_Get,},
 
     // Action settings
     {.pattern = "RUN", .callback = RUN_Execute,},

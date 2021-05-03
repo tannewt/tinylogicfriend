@@ -34,11 +34,11 @@
 #define SCPI_INPUT_BUFFER_LENGTH 256
 #define SCPI_ERROR_QUEUE_SIZE 17
 
-// The following should be defined in the board-specific package * todo ** move to a board specific file
-#define SCPI_IDN1 "AdafruitIndustries"
-#define SCPI_IDN2 "TinyLogicFriend"
-#define SCPI_IDN3 "21-04"
-#define SCPI_IDN4 "ItsyBitsyM4"
+// // The following should be defined in the board-specific package * todo ** move to a board specific file
+// #define SCPI_IDN1 "AdafruitIndustries"
+// #define SCPI_IDN2 "TinyLogicFriend"
+// #define SCPI_IDN3 "21-04"
+// #define SCPI_IDN4 "ItsyBitsyM4"
 
 extern const scpi_command_t scpi_commands[];
 extern scpi_interface_t scpi_interface;

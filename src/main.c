@@ -35,10 +35,7 @@
 #include "scpi_parser.h"
 #include "logic_capture.h"
 #include "channels.h"
-
-
-#define TLF_USBTMC_TX_BUFSIZE 5000
-#define TLF_DATA_BUFFER_LENGTH 12
+#include "itsybitsy_m4.h"
 
 
 uint16_t data_requested, data_send_complete;
