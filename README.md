@@ -22,20 +22,23 @@ Make it easy to use a microcontroller board as a logic analyzer.
 
 ## Using and hacking:
 1. Install the [sigrok suite](https://sigrok.org/wiki/Downloads).  This can be run at the command line using `sigrok-cli` or using the `PulseView` graphical interface.
-2a. If your board is supported:
-  - Download the appropriate `.UF2` file.  Put your board into bootloader mode and copy the `.UF2` file to your board.
-2b. If your board is not supported:
-  - Download the example file and update the following sections of these files according to your board's requirements:
-    - Add entry in `boards/`
-    - If your chip is not supported, create the logic_capture.c` and logic_capture.h` under
-    the directory `mcu/(VENDOR)/(CHIP_FAMILY)`
-    - Run make with the board, chip VENDOR and CHIP_FAMILY for example:
-       `make BOARD=itsybitsy_m4 VENDOR=microchip CHIP_FAMILY=samd51`
-    - Put your board into bootloader mode (usually by double-clicking the reset button).
-    - Build the UF2 file (from the `.bin` file that is created in the `_build` directory) and copy the UF2 file onto the board's boot drive, for example:
-    `python uf2conv.py -c -b 0x4000 -o _build/itsybitsy_m4/itsybitsy_m4-tinylogicfriend.uf2 _build/itsybitsy_m4/itsybitsy_m4-tinylogicfriend.bin; cp _build/itsybitsy_m4/itsybitsy_m4-tinylogicfriend.uf2 /Volumes/ITSYM4BOOT`
+2. If your board is supported: Download the appropriate `.UF2` file.
 3. Connect your tinyLogicFriend to your host computer via USB (be sure you are using a USB cable with the signal lines connected).
-4. Start up `sigrok-cli` or `PulseView` and confirm that your tinyLogicFriend is detected.
+4. Put your board into bootloader mode (usually by double-clicking and copy the `.UF2` file to your board.
+
+5. Start up `sigrok-cli` or `PulseView` and confirm that your tinyLogicFriend is detected.
+
+### If your board is not yet supported:
+1. Download the example file and update the following sections of these files according to your board's requirements:
+    - Add entry in `boards/`
+    - If your chip is not supported, create the `logic_capture.c` and `logic_capture.h` under
+    the directory `mcu/(VENDOR)/(CHIP_FAMILY)`
+2. Run make with the board, chip VENDOR and CHIP_FAMILY for example:
+       `make BOARD=itsybitsy_m4 VENDOR=microchip CHIP_FAMILY=samd51`
+3. Connect to the host computer via USB and put your board into bootloader mode (usually by double-clicking the reset button).
+4. Build the UF2 file (from the `.bin` file that is created in the `_build` directory) and copy the UF2 file onto the board's boot drive, for example:
+    `python uf2conv.py -c -b 0x4000 -o _build/itsybitsy_m4/itsybitsy_m4-tinylogicfriend.uf2 _build/itsybitsy_m4/itsybitsy_m4-tinylogicfriend.bin; cp _build/itsybitsy_m4/itsybitsy_m4-tinylogicfriend.uf2 /Volumes/ITSYM4BOOT`
+
 
 ## Some implementation details:
 - Includes a basic set of SCPI (Standard Commands for Programmable Instruments) commands suitable for basic digital logic analysis
