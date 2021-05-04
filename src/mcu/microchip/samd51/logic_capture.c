@@ -1,12 +1,11 @@
-#include "logic_capture.h"
-
 #include <stdbool.h>
 #include <string.h>
 
 #include "main.h"
 #include "sam.h"
 #include "bsp/board.h"
-#include "channels.h"
+#include "logic_capture.h"
+#include "instrument_constants.h"
 
 uint16_t timestamps[MEASURE_BUFFER_SIZE];
 uint16_t values[MEASURE_BUFFER_SIZE];
@@ -15,7 +14,7 @@ uint16_t measure_count=0; // number of samples that were measured
 bool running = false;
 bool finished = false;
 
-// // Tell linker to store these functions in RAM
+// // // //   Tell linker to store these functions in RAM
 ///////////// This didn't seem to have any performance improvement on Cortex M4
 // #define RAMFUNC __attribute__((section(".ramfunc")))
 // void EIC_Handler(void) RAMFUNC;

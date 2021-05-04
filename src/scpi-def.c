@@ -43,15 +43,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "main.h"
 #include "../lib/libscpi/inc/scpi/scpi.h"
 #include "scpi-def.h"
 #include "bsp/board.h"
-
-#include "channels.h"
 #include "instrument_constants.h"
 #include "logic_capture.h"
-
 
 
 struct _scpi_channel_value_t {

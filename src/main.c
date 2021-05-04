@@ -34,26 +34,14 @@
 #include "usbtmc_app.h"
 #include "scpi_parser.h"
 #include "logic_capture.h"
-#include "channels.h"
-// #include "../boards/metro_m4_express/board.h"
+#include "instrument_constants.h"
 #include "tlf_board.h"
 
-uint16_t data_requested, data_send_complete;
+uint16_t data_requested, data_send_complete; // state variables
 uint16_t send_buffer_counter=0;
+int send_buffer_times_called=0;
 
-int packets_sent=0;
-
-uint16_t tlf_output_buffer[TLF_DATA_BUFFER_LENGTH*4]; // todo ** verify the size of the elements in the buffer
-
-
-  // FIFO buffer for TinyLogicFriend's USBTMC class // modified from cdc_device.c
-  // tu_fifo_t tlf_tx_ff;
-
-  // uint16_t tlf_tx_ff_buf[TLF_USBTMC_TX_BUFSIZE];
-
-#if CFG_FIFO_MUTEX
-  osal_mutex_def_t tlf_tx_ff_mutex;
-#endif
+uint16_t tlf_output_buffer[TLF_DATA_BUFFER_LENGTH*4]; // Data output buffer
 
 
 //--------------------------------------------------------------------+
@@ -84,20 +72,15 @@ int main(void)
 
   board_init();
   tusb_init();
-
   board_led_write(led_state);
-  // led_state = 1 - led_state; // toggle
 
   scpi_init();
-
-  tlf_fifo_init(); // create the buffer
-
   logic_capture_init();
 
   while (1)
   {
     tud_task(); // tinyusb device task
-    usbtmc_app_task_iter();
+    usbtmc_app_task_iter();  // USBTMC communications
   }
 
   return 0;
@@ -135,13 +118,20 @@ void tud_resume_cb(void)
 }
 
 
-
 //--------------------------------------------------------------------+
 // TinyLogicFriend communication
 //--------------------------------------------------------------------+
 
+void flag_reset_send_buffer_counter(void){
+  // initialize state variable when new read is performed
+  send_buffer_counter = 0;
+}
 
-// static uint32_t tlf_data_buffer_count=0;
+void flag_data_requested(void) {
+  // initialize state variables to send data
+  data_requested = 1;
+  data_send_complete = 0;
+}
 
 int tlf_fifo_task(void) {
 
@@ -157,33 +147,13 @@ int tlf_fifo_task(void) {
   return 0;
 }
 
-void flag_reset_send_buffer_counter(void){
-  send_buffer_counter = 0;
-}
-
-void flag_data_requested(void) {
-  //board_led_write(0);
-  data_requested = 1;
-  data_send_complete = 0;
-}
-
-void tlf_fifo_init(void) {
-//   // currently setup for uint16_t size (2 bytes)
-//   tu_fifo_config(&tlf_tx_ff, tlf_tx_ff_buf, TU_ARRAY_SIZE(tlf_tx_ff_buf), 2, false); // not overwritable
-
-// #if CFG_FIFO_MUTEX
-//   tu_fifo_config_mutex(&tlf_tx_ff, osal_mutex_create(tlf_tx_ff_mutex));
-// #endif
-}
-
-int send_buffer_times_called=0;
-
-void tlf_send_buffer(void) { // send a packet of data on BulkIn to the host
-
-  send_buffer_times_called++;
+void tlf_send_buffer(void) {
+  // send a packet of data on BulkIn to the host
 
   uint16_t j=0; // loop counter for putting measurement data into output buffer
   uint16_t values_to_send = 0;
+
+  send_buffer_times_called++;
 
   for (j=0; j < TLF_DATA_BUFFER_LENGTH; j++) {
 
@@ -194,115 +164,20 @@ void tlf_send_buffer(void) { // send a packet of data on BulkIn to the host
     }
   }
 
-  // uint16_t test_buffer[] = {0, 2, 110, 0, 150, 2, 200, 0};
-
-  // tud_usbtmc_transmit_dev_msg_data(test_buffer, 16, false, false);
-
   if (send_buffer_counter < samples) {
 
-    // tud_usbtmc_transmit_dev_msg_data(test_buffer, 16, false, false); // correct count for the size of the uint16_t, in bytes
-
     if ( tud_usbtmc_transmit_dev_msg_data(tlf_output_buffer, values_to_send*4, false, false) ) { // correct count for the size of the uint16_t, in bytes
-      // board_led_write(0);
     }
     send_buffer_counter += values_to_send;
 
-    if (packets_sent == 1) {
-      // board_led_write(0);
-    }
-
-    packets_sent++;
-
-
   } else {
     if ( tud_usbtmc_transmit_dev_msg_data(EOM_message, 0, true, false) ) {
-      // board_led_write(0);
       data_send_complete = 1;
     } // no data to send. Send End Of Message signal
 
   }
-  if (send_buffer_counter > 12) {
-    //board_led_write(0);
-  }
-
-  if (send_buffer_times_called == 2) {
-    board_led_write(0);
-  }
-
 
 }
-
-
-// uint16_t queue_count=0; // for debug
-
-
-// void tlf_queue_data(uint16_t *data) { // add data to the output FIFO queue
-
-//   // data[0]=queue_count;
-//   // queue_count += 1;
-
-//   // // data[1]=tu_fifo_count(&tlf_tx_ff);
-//   // data[1]=send_count;
-
-//   if ( (!tu_fifo_overflowed(&tlf_tx_ff) > 0) &&
-//        (measure_count < samples) ) {
-
-//     tu_fifo_write_n(&tlf_tx_ff, data, 2); // add the (timestamp, value) to the measurement FIFO output queue
-//     measure_count += 1; // add another count
-//     // board_led_write(0);
-//   } else { // *** overflow! ***
-
-//     logic_capture_stop();
-
-//   }
-// }
-
-
-
-
-
-// //////**** obsolete
-// void tlf_queue_data(uint16_t value, uint32_t timestamp) {
-
-//     memcpy(&tlf_data_buffer[tlf_data_buffer_count], (uint16_t *) (&timestamp), 2);
-//     memcpy(&tlf_data_buffer[tlf_data_buffer_count+2], &value, 2);
-
-//     tlf_data_buffer_count += 4;
-
-//     // move this to a separate task in the loop  -> need a fifo buffer.
-//     if (tlf_data_buffer_count > TLF_TRIGGER_TRANSMIT_LENGTH) {
-//       // tud_usbtmc_transmit_dev_msg_data(tlf_data_buffer, tlf_data_buffer_count, (counter > 5), false);  // this is a way to end the transmission
-//       tud_usbtmc_transmit_dev_msg_data(tlf_data_buffer, tlf_data_buffer_count, false, false);
-//       tlf_data_buffer_count=0;
-//     }
-
-// }
-
-// void tlf_queue_sample(uint8_t* sample, uint32_t sample_len) {
-
-//     // this sends one measurement packet at a time.  This is totally inefficient
-//     // it should use a buffer and then only transmit with the third
-//     // argument (endOfMessage) when the buffer is full
-//     //
-//     // Is there enough time to check for full buffer and send?
-//     //
-//     // TODO ** clean this up
-
-//     tud_usbtmc_transmit_dev_msg_data(sample, sample_len, false, false);
-
-//     // (void) sample;
-//     // (void) sample_len;
-
-//     // char test[]="test";
-//     // tud_usbtmc_transmit_dev_msg_data(test, 4, false, false);
-
-
-//     //tud_cdc_write(sample, sample_len);
-
-//     // if (sent == 0) {
-//     //   asm("bkpt");
-//     // }
-// }
 
 
 //--------------------------------------------------------------------+

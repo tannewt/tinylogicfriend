@@ -77,8 +77,6 @@ tud_usbtmc_app_capabilities  =
 #define IEEE4882_STB_SER          (0x20u)
 #define IEEE4882_STB_SRQ          (0x40u)
 
-//static const char idn[] = "AdafruitIndustries,TinyLogicFriend-ItsyBitsyM4,SN0001,FirmwareVer123456\r\n";
-//static const char idn[] = "TinyUSB,ModelNumber,SerialNumber,FirmwareVer and a bunch of other text to make it longer than a packet, perhaps? lets make it three transfers...\n";
 static const char luvu2[] = "LUVU2\r\n";
 static volatile uint8_t status;
 
@@ -97,14 +95,7 @@ static size_t buffer_outlen = 0;
 static size_t buffer_inlen  = 0;
 static size_t buffer_tx_ix; // for transmitting using multiple transfers
 static uint8_t buffer_out[225]; // Receive packets: A few packets long should be enough.
-//static uint8_t buffer_in[225]; // Return packets: A few packets long should be enough.
 static uint8_t buffer_in[4096]; // Return packets: A few packets long should be enough.
-
-//uint32_t samples=0; // Number of samples to be measured
-
-
-// running = false;
-// data_requested = false;
 
 static usbtmc_msg_dev_dep_msg_in_header_t rspMsg = {
     .bmTransferAttributes =
@@ -129,7 +120,6 @@ tud_usbtmc_get_capabilities_cb()
 {
   return &tud_usbtmc_app_capabilities;
 }
-
 
 bool tud_usbtmc_msg_trigger_cb(usbtmc_msg_generic_t* msg) {
   (void)msg;
@@ -163,7 +153,6 @@ bool copy_to_buffer(const char *data, size_t len)
   memcpy(&(buffer_in[buffer_inlen]), data, len);
   buffer_inlen += len;
 
-  //board_led_write(0);
   queryState=4; // trial
 
   return true;
@@ -272,21 +261,7 @@ bool tud_usbtmc_msgBulkIn_request_cb(usbtmc_msg_request_dev_dep_in const * reque
 
 void usbtmc_app_task_iter(void) {
 
-  // if (data_requested) { // send data to host
-  //   //tud_usbtmc_transmit_dev_msg_data(luvu2, tu_min32(sizeof(luvu2)-1,msgReqLen),true,false);
-  //   tlf_fifo_task();
-  //   // board_led_write(0);
-  //   data_requested = false;
-  // }
-
-  // if (running) {
-  //   if (measure_count > samples) {  // completed all the measurements
-  //     logic_capture_stop();
-  //   }
-  // }
-
   if (running) { // measurement loop is running, ignore all inputs for now
-                 // todo - accept the STOP command
     return;
   }
 
@@ -312,28 +287,19 @@ void usbtmc_app_task_iter(void) {
     }
     break;
   case 4: // time to transmit;
-    if ( tlf_fifo_task() ) {
-      // queryState=0;
+    if ( tlf_fifo_task() ) { // send any DATA? if required
       break;
     }
     if(bulkInStarted && (buffer_tx_ix == 0)) {
-      // if(idnQuery)
-      // {
-      //   tud_usbtmc_transmit_dev_msg_data(idn, tu_min32(sizeof(idn)-1,msgReqLen),true,false);
-      //   queryState = 0;
-      //   bulkInStarted = 0;
-      // }
-      // else if(luvQuery){
+
       if(luvQuery){
         tud_usbtmc_transmit_dev_msg_data(luvu2, tu_min32(sizeof(luvu2)-1,msgReqLen),true,false);
         queryState = 0;
         bulkInStarted = 0;
       }
       else if(parseQuery && (buffer_inlen > 0) ){
-        //board_led_write(0);
 
         tud_usbtmc_transmit_dev_msg_data(buffer_in, buffer_inlen, true, false);
-        //tud_usbtmc_transmit_dev_msg_data("buffer", 7, true, false);
         queryState = 0;
         bulkInStarted = 0;
         parseQuery = 0;
@@ -342,7 +308,7 @@ void usbtmc_app_task_iter(void) {
       }
       else
       {
-        // echo the command back to the host
+        // // comment out echo the command back to the host
         // buffer_tx_ix = tu_min32(buffer_outlen,msgReqLen);
         // tud_usbtmc_transmit_dev_msg_data(buffer_out, buffer_tx_ix, buffer_tx_ix == buffer_outlen, false);
         // queryState = 0;
