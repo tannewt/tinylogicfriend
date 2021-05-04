@@ -35,8 +35,8 @@
 #include "scpi_parser.h"
 #include "logic_capture.h"
 #include "channels.h"
-#include "itsybitsy_m4.h"
-
+// #include "../boards/metro_m4_express/board.h"
+#include "tlf_board.h"
 
 uint16_t data_requested, data_send_complete;
 uint16_t send_buffer_counter=0;
@@ -47,9 +47,9 @@ uint16_t tlf_output_buffer[TLF_DATA_BUFFER_LENGTH*4]; // todo ** verify the size
 
 
   // FIFO buffer for TinyLogicFriend's USBTMC class // modified from cdc_device.c
-  tu_fifo_t tlf_tx_ff;
+  // tu_fifo_t tlf_tx_ff;
 
-  uint16_t tlf_tx_ff_buf[TLF_USBTMC_TX_BUFSIZE];
+  // uint16_t tlf_tx_ff_buf[TLF_USBTMC_TX_BUFSIZE];
 
 #if CFG_FIFO_MUTEX
   osal_mutex_def_t tlf_tx_ff_mutex;
@@ -97,18 +97,7 @@ int main(void)
   while (1)
   {
     tud_task(); // tinyusb device task
-    // led_blinking_task();
     usbtmc_app_task_iter();
-    //tlf_fifo_task();
-
-    // // Blink every interval ms
-    // if ( (board_millis() - start_ms) > blink_interval_ms) { // time has elapsed
-    // //if ( (board_millis() - start_ms) > blink_interval_ms) { // time has elapsed
-    //   start_ms += blink_interval_ms;
-
-    //   board_led_write(led_state);
-    //   led_state = 1 - led_state; // toggle
-    // }
   }
 
   return 0;
@@ -244,29 +233,29 @@ void tlf_send_buffer(void) { // send a packet of data on BulkIn to the host
 }
 
 
-uint16_t queue_count=0; // for debug
+// uint16_t queue_count=0; // for debug
 
 
-void tlf_queue_data(uint16_t *data) { // add data to the output FIFO queue
+// void tlf_queue_data(uint16_t *data) { // add data to the output FIFO queue
 
-  // data[0]=queue_count;
-  // queue_count += 1;
+//   // data[0]=queue_count;
+//   // queue_count += 1;
 
-  // // data[1]=tu_fifo_count(&tlf_tx_ff);
-  // data[1]=send_count;
+//   // // data[1]=tu_fifo_count(&tlf_tx_ff);
+//   // data[1]=send_count;
 
-  if ( (!tu_fifo_overflowed(&tlf_tx_ff) > 0) &&
-       (measure_count < samples) ) {
+//   if ( (!tu_fifo_overflowed(&tlf_tx_ff) > 0) &&
+//        (measure_count < samples) ) {
 
-    tu_fifo_write_n(&tlf_tx_ff, data, 2); // add the (timestamp, value) to the measurement FIFO output queue
-    measure_count += 1; // add another count
-    // board_led_write(0);
-  } else { // *** overflow! ***
+//     tu_fifo_write_n(&tlf_tx_ff, data, 2); // add the (timestamp, value) to the measurement FIFO output queue
+//     measure_count += 1; // add another count
+//     // board_led_write(0);
+//   } else { // *** overflow! ***
 
-    logic_capture_stop();
+//     logic_capture_stop();
 
-  }
-}
+//   }
+// }
 
 
 

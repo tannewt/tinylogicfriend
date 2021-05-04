@@ -10,13 +10,16 @@ INC += \
 	$(TOP)/lib/libscpi/inc \
 	$(TOP)/lib/libscpi/src \
 	src/mcu/$(VENDOR)/$(CHIP_FAMILY) \
-	boards/$(BOARD)
+	/Users/margaret/Github/tinylogicfriend/boards/$(BOARD)/
+
+$(info INC: $(INC))
 
 # # Main code: TinyLogicFriend
 $(info Build TinyLogicFriend.)
-SRC_C += $(wildcard src/*.c)
+
 SRC_C += $(wildcard src/mcu/$(VENDOR)/$(CHIP_FAMILY)/*.c)
 SRC_C += $(wildcard boards/$(BOARD)/*.c)
+SRC_C += $(wildcard src/*.c)
 
 # # scpi-parser
 $(info Build libscpi the scpi-parser.)

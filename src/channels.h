@@ -1,3 +1,9 @@
+// channels.h
+//
+// Header for the state variables for the device, including
+// the measurement settings (sample rate, # of samples)
+//
+
 #include <stdio.h>
 #include "instrument_types.h"
 

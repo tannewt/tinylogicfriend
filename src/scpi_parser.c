@@ -35,6 +35,9 @@
  *
  */
 
+// Copyright (c) 2021 Kevin Matocha
+// MIT License
+
 /* renamed to scpi_parser.c
  8 April 2021, Kevin Matocha
  */
@@ -50,7 +53,7 @@
 #include "bsp/board.h"
 #include "usbtmc_app.h"
 
-#include "itsybitsy_m4.h"
+#include "tlf_board.h"
 
 size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
     (void) context;
@@ -59,10 +62,6 @@ size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
     // This should just add data to the buffer,
     // then `usbtmc_app_task_iter` should send it out
 
-    //tud_usbtmc_transmit_dev_msg_data(data, len, true, false);
-    //tud_usbtmc_transmit_dev_msg_data(dummy, sizeof(dummy)-1, true, false);
-
-    //board_led_write(0);
     copy_to_buffer(data, len);
     set_parse_query(1); // send message to iter that a parse has been completed
 
