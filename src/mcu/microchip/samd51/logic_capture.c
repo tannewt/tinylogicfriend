@@ -26,6 +26,7 @@ void EIC_Handler(void) {
     uint16_t const value = EIC->PINSTATE.reg;
 
     TC0->COUNT16.CTRLBSET.reg = TC_CTRLBSET_CMD_READSYNC;
+    // board_led_write(0);
 
     if (measure_count < samples) {
 
@@ -35,9 +36,8 @@ void EIC_Handler(void) {
 
         timestamps[measure_count] = TC0->COUNT16.COUNT.reg;
         values[measure_count]     = value;
-
         measure_count++;
-
+        // board_led_write(0);
         return;
     }
 
@@ -45,7 +45,6 @@ void EIC_Handler(void) {
     return;
 
 }
-
 
 void EIC_0_Handler(void) { EIC_Handler(); }
 void EIC_1_Handler(void) { EIC_Handler(); }
@@ -77,7 +76,6 @@ void TC0_Handler(void) {
 
 }
 
-
 void logic_capture_init(void) {
     // Connect the APB bus.
     MCLK->APBAMASK.reg |= MCLK_APBAMASK_EIC | MCLK_APBAMASK_TC0;
@@ -91,7 +89,7 @@ void logic_capture_start(void) {
 
     // setup state variables and counters
 
-    send_buffer_counter = 0; // clear counter for number of samples sent
+    // send_buffer_counter = 0; // clear counter for number of samples sent
     measure_count = 0; // reset the measurement counter
     running = true;
     finished = false;
@@ -113,29 +111,30 @@ void logic_capture_start(void) {
                                   PORT_WRCONFIG_PMUXEN |
                                   0x00FF ; // use pins PA16-23
 
-    // Setup pins PA08 to PA15
-    PORT->Group[0].WRCONFIG.reg = PORT_WRCONFIG_WRPINCFG |
-                                  PORT_WRCONFIG_WRPMUX |
-                                  PORT_WRCONFIG_PMUX(0) |
-                                  PORT_WRCONFIG_PMUXEN |
+    // // Setup pins PA08 to PA15
+    // PORT->Group[0].WRCONFIG.reg = PORT_WRCONFIG_WRPINCFG |
+    //                               PORT_WRCONFIG_WRPMUX |
+    //                               PORT_WRCONFIG_PMUX(0) |
+    //                               PORT_WRCONFIG_PMUXEN |
 
-                                  0xFF00; // use pins PA8-15
+    //                               0xFF00; // use pins PA8-15
 
 
     EIC->ASYNCH.reg = 0xffff;
     EIC->CONFIG[0].reg = 0x33333333;
     EIC->CONFIG[1].reg = 0x33333333;
-    EIC->INTENSET.reg = 0xFFFF;  // Respond to 16 EIC inputs
+    // EIC->INTENSET.reg = 0xFFFF;  // Respond to 16 EIC inputs
+    EIC->INTENSET.reg = 0x00FF;
     EIC->DEBOUNCEN.reg = 0xffff;
 
     EIC->CTRLA.reg = EIC_CTRLA_ENABLE;
     while (EIC->SYNCBUSY.reg & EIC_SYNCBUSY_ENABLE);
 
-
     // Use TC0 to timestamp the pin change.
     TC0->COUNT16.CTRLA.reg = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_ENABLE;
 
     TC0->COUNT16.INTENSET.reg = TC_INTFLAG_OVF;
+    // TC0->COUNT16.COUNT.reg = 0;
 
     // store the initial timestamp
     timestamps[0] = 0;
@@ -148,6 +147,8 @@ void logic_capture_start(void) {
         NVIC_EnableIRQ(eic_irq);
     }
     TC0->COUNT16.CTRLBSET.reg = TC_CTRLBSET_CMD_RETRIGGER;
+
+
 }
 
 void logic_capture_stop(void) {
@@ -158,7 +159,6 @@ void logic_capture_stop(void) {
     EIC->CTRLA.bit.ENABLE = false;
     TC0->COUNT32.CTRLA.bit.ENABLE = false;
 
-    flag_reset_send_buffer_counter(); // reset the counter, indicating that no data has been sent from the current buffer
     running = false;
     finished = true;
 

@@ -304,7 +304,7 @@ void usbtmc_app_task_iter(void) {
         bulkInStarted = 0;
         parseQuery = 0;
         buffer_inlen = 0;
-        board_led_write(0);
+        // board_led_write(0);
       }
       else
       {

@@ -12,7 +12,7 @@ uint32_t sample_rate_step = 1; // step size beteween minimum and maximum samplin
 uint32_t sample_rate = 48000000; // default sampling rate (Hz)
 
 // Redefine default and max number of samples based on buffer size
-uint32_t samples = 10000; // default number of samples to measure, will be set by sigrok-cli or PulseView
+uint32_t samples = 50000; // default number of samples to measure, will be set by sigrok-cli or PulseView
 uint32_t max_samples = TLF_USBTMC_TX_BUFSIZE; // see .h file for #define statement
 
 

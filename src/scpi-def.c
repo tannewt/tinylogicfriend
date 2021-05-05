@@ -354,6 +354,8 @@ static scpi_result_t SAMPLES_Set(scpi_t * context) { // set the number of sample
 
     scpi_number_t param1;
 
+    // board_led_write(0); // * for debug
+
     /* read first parameter if present */
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, TRUE)) {
         return SCPI_RES_ERR;
@@ -395,9 +397,12 @@ static scpi_result_t DATA_Request(scpi_t * context) {
 // start the acquisition
 static scpi_result_t RUN_Execute(scpi_t * context) {
     (void) context;
-    // board_led_write(0); // * for debug
+    board_led_write(0); // * for debug
 
+    flag_reset_send_buffer_counter(); // reset the counter, indicating that no data has been sent from the current buffer
+    // board_led_write(0);
     logic_capture_start(); // call the board specific function
+
 
     return SCPI_RES_OK;
 }
@@ -406,6 +411,7 @@ static scpi_result_t RUN_Execute(scpi_t * context) {
 static scpi_result_t STOP_Execute(scpi_t * context) {
     (void) context;
 
+    flag_reset_send_buffer_counter(); // reset the counter, indicating that no data has been sent from the current buffer
     logic_capture_stop(); // call the board specific function
 
     return SCPI_RES_OK;

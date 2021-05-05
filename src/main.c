@@ -200,7 +200,7 @@ void led_blinking_task(void)
     if(doPulse)
     {
       led_state = true;
-      board_led_write(true);
+      // board_led_write(true);
       start_ms = board_millis();
       doPulse = false;
     }
@@ -211,7 +211,7 @@ void led_blinking_task(void)
         return; // not enough time
       }
       led_state = false;
-      board_led_write(false);
+      // board_led_write(false);
     }
   }
   else
@@ -220,7 +220,7 @@ void led_blinking_task(void)
     if ( board_millis() - start_ms < blink_interval_ms) return; // not enough time
     start_ms += blink_interval_ms;
 
-    board_led_write(led_state);
+    // board_led_write(led_state);
     led_state = 1 - led_state; // toggle
   }
 }
