@@ -6,9 +6,12 @@
 #include "bsp/board.h"
 #include "logic_capture.h"
 #include "instrument_constants.h"
+#include "tlf_board.h"
 
-uint16_t timestamps[MEASURE_BUFFER_SIZE];
-uint16_t values[MEASURE_BUFFER_SIZE];
+
+// TLF_USBTMC_TX_BUFSIZE defined in tlf_board.h
+uint16_t timestamps[TLF_USBTMC_TX_BUFSIZE];
+uint16_t values[TLF_USBTMC_TX_BUFSIZE];
 uint16_t measure_count=0; // number of samples that were measured
 
 bool running = false;

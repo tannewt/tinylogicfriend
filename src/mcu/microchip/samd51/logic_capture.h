@@ -49,7 +49,6 @@ typedef struct _capture_channel {
 
 extern capture_channel_t channel_list[];
 
-#define MEASURE_BUFFER_SIZE 35000
 extern uint16_t timestamps[];
 extern uint16_t values[];
 
