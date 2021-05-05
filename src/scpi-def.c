@@ -411,9 +411,8 @@ static scpi_result_t RUN_Execute(scpi_t * context) {
 static scpi_result_t STOP_Execute(scpi_t * context) {
     (void) context;
 
-    flag_reset_send_buffer_counter(); // reset the counter, indicating that no data has been sent from the current buffer
     logic_capture_stop(); // call the board specific function
-
+    flag_reset_send_buffer_counter(); // reset the counter, indicating that no data has been sent from the current buffer
     return SCPI_RES_OK;
 }
 

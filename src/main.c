@@ -39,7 +39,7 @@
 
 uint16_t data_requested, data_send_complete; // state variables
 uint16_t send_buffer_counter=0;
-int send_buffer_times_called=0;
+// int send_buffer_times_called=0;
 
 uint16_t tlf_output_buffer[TLF_DATA_BUFFER_LENGTH*4]; // Data output buffer
 
@@ -153,7 +153,7 @@ void tlf_send_buffer(void) {
   uint16_t j=0; // loop counter for putting measurement data into output buffer
   uint16_t values_to_send = 0;
 
-  send_buffer_times_called++;
+  // send_buffer_times_called++;
 
   for (j=0; j < TLF_DATA_BUFFER_LENGTH; j++) {
 

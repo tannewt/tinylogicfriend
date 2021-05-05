@@ -111,20 +111,19 @@ void logic_capture_start(void) {
                                   PORT_WRCONFIG_PMUXEN |
                                   0x00FF ; // use pins PA16-23
 
-    // // Setup pins PA08 to PA15
-    // PORT->Group[0].WRCONFIG.reg = PORT_WRCONFIG_WRPINCFG |
-    //                               PORT_WRCONFIG_WRPMUX |
-    //                               PORT_WRCONFIG_PMUX(0) |
-    //                               PORT_WRCONFIG_PMUXEN |
+    // Setup pins PA08 to PA15
+    PORT->Group[0].WRCONFIG.reg = PORT_WRCONFIG_WRPINCFG |
+                                  PORT_WRCONFIG_WRPMUX |
+                                  PORT_WRCONFIG_PMUX(0) |
+                                  PORT_WRCONFIG_PMUXEN |
 
-    //                               0xFF00; // use pins PA8-15
+                                  0xFF00; // use pins PA8-15
 
 
     EIC->ASYNCH.reg = 0xffff;
     EIC->CONFIG[0].reg = 0x33333333;
     EIC->CONFIG[1].reg = 0x33333333;
-    // EIC->INTENSET.reg = 0xFFFF;  // Respond to 16 EIC inputs
-    EIC->INTENSET.reg = 0x00FF;
+    EIC->INTENSET.reg = 0xFFFF;  // Respond to 16 EIC inputs
     EIC->DEBOUNCEN.reg = 0xffff;
 
     EIC->CTRLA.reg = EIC_CTRLA_ENABLE;

@@ -261,9 +261,9 @@ bool tud_usbtmc_msgBulkIn_request_cb(usbtmc_msg_request_dev_dep_in const * reque
 
 void usbtmc_app_task_iter(void) {
 
-  if (running) { // measurement loop is running, ignore all inputs for now
-    return;
-  }
+  // if (running) { // measurement loop is running, ignore all inputs for now
+  //   return;
+  // }
 
   switch(queryState) {
   case 0:
