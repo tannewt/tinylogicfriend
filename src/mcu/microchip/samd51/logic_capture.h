@@ -25,8 +25,6 @@
 
 #include <stdint.h>
 
-
-
 void logic_capture_init(void);
 void logic_capture_start(void);
 void logic_capture_stop(void);
@@ -53,3 +51,5 @@ extern uint16_t timestamps[];
 extern uint16_t values[];
 
 extern uint16_t send_buffer_counter;
+
+extern bool RLE_mode; // boolean to identify whether board runs in Run Length Encoding (RLE) or not (CLOCK)

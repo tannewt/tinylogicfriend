@@ -8,8 +8,12 @@
 #include "instrument_constants.h"
 #include "tlf_board.h"
 
+// TinyLogicFriend logic_capture functions
+// for Cortex M4 series - ATMEL/SAMD
 
 // TLF_USBTMC_TX_BUFSIZE defined in tlf_board.h
+bool RLE_mode = true; // The Cortex M4 TinyLogicFriend is currently written using Run Length Encoding
+
 uint16_t timestamps[TLF_USBTMC_TX_BUFSIZE];
 uint16_t values[TLF_USBTMC_TX_BUFSIZE];
 uint16_t measure_count=0; // number of samples that were measured

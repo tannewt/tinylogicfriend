@@ -103,7 +103,7 @@ Make it easy to use a microcontroller board as a logic analyzer.
 
 - [ ] `MODE <Y>` Either `RLE` or `CLOCK`.  Run-length encoded or sample at configured sampling rate.
 
-- [ ] `MODE?` Either `RLE` or `CLOCK`
+- [x] `MODE?` Either `RLE` or `CLOCK`
 
 - [x] `Run` Start measurement
 

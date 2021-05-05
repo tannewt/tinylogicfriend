@@ -385,6 +385,21 @@ static scpi_result_t SAMPLES_Max_Get(scpi_t * context) { // Get the number of sa
     return SCPI_RES_OK;
 }
 
+// get whether the data is returned in Run-Length-Encoded Tuples (16-bit timestamp, 16-bit value)
+// or in pure samples (16-bit value only)
+static scpi_result_t MODE_Get(scpi_t * context) {
+
+    if (RLE_mode) {
+        SCPI_ResultCharacters(context, "RLE", 3); // decode to the string
+        fprintf(stderr, "Mode: Run-Length-Encoded (RLE)");
+        return SCPI_RES_OK;
+    }
+
+    SCPI_ResultCharacters(context, "CLOCK", 5); // decode to the string
+        fprintf(stderr, "Mode: Sampling (CLOCK)");
+        return SCPI_RES_OK;
+}
+
 // send a data packet
 static scpi_result_t DATA_Request(scpi_t * context) {
     (void) context;
@@ -478,6 +493,9 @@ const scpi_command_t scpi_commands[] = {
     {.pattern = "SAMPLes", .callback = SAMPLES_Set,},
     {.pattern = "SAMPLes?", .callback = SAMPLES_Get,},
     {.pattern = "SAMPLes:MAX?", .callback = SAMPLES_Max_Get,},
+
+    // Get whether data is sent in Run-Length-Encoded (RLE) tuples, or raw samples
+    {.pattern = "MODE?", .callback = MODE_Get,},
 
     // Action settings
     {.pattern = "RUN", .callback = RUN_Execute,},
