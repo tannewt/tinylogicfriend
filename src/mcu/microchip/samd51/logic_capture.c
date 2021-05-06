@@ -8,6 +8,10 @@
 #include "instrument_constants.h"
 #include "tlf_board.h"
 
+#ifdef BOARD_NEOPIXEL_PIN
+#include "neopixel.h"
+#endif
+
 // TinyLogicFriend logic_capture functions
 // for Cortex M4 series - ATMEL/SAMD
 
@@ -20,6 +24,7 @@ uint16_t measure_count=0; // number of samples that were measured
 
 bool running = false;
 bool finished = false;
+
 
 // // // //   Tell linker to store these functions in RAM
 ///////////// This didn't seem to have any performance improvement on Cortex M4
@@ -94,6 +99,10 @@ void logic_capture_init(void) {
 
 void logic_capture_start(void) {
 
+#ifdef BOARD_NEOPIXEL_PIN
+    RGBLED_set_color(0x00FF00);
+#endif
+
     // setup state variables and counters
 
     // send_buffer_counter = 0; // clear counter for number of samples sent
@@ -167,6 +176,10 @@ void logic_capture_stop(void) {
 
     running = false;
     finished = true;
+
+#ifdef BOARD_NEOPIXEL_PIN
+    RGBLED_set_color(0x000000);
+#endif
 
 }
 

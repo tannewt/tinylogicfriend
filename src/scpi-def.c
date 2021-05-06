@@ -418,15 +418,15 @@ static scpi_result_t RUN_Execute(scpi_t * context) {
     // board_led_write(0);
     logic_capture_start(); // call the board specific function
 
-
     return SCPI_RES_OK;
 }
 
 // stop the acquisition and clean up
 static scpi_result_t STOP_Execute(scpi_t * context) {
     (void) context;
-
-    logic_capture_stop(); // call the board specific function
+    if (running) {
+        logic_capture_stop(); // call the board specific function
+    }
     flag_reset_send_buffer_counter(); // reset the counter, indicating that no data has been sent from the current buffer
     return SCPI_RES_OK;
 }

@@ -17,6 +17,8 @@ $(info INC: $(INC))
 # # Main code: TinyLogicFriend
 $(info Build TinyLogicFriend.)
 
+CFLAGS += -O1
+
 SRC_C += $(wildcard src/mcu/$(VENDOR)/$(CHIP_FAMILY)/*.c)
 SRC_C += $(wildcard boards/$(BOARD)/*.c)
 SRC_C += $(wildcard src/*.c)
