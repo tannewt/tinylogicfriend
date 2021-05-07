@@ -80,9 +80,8 @@ int main(void)
   scpi_init();
   logic_capture_init();
 
-#ifdef BOARD_NEOPIXEL_PIN
-  RGBLED_set_color(0x110000);
-#endif
+  LED_set_color(0x110000);
+
 
   while (1)
   {
@@ -139,9 +138,7 @@ void flag_data_requested(void) {
   data_requested = 1;
   data_send_complete = 0;
 
-#ifdef BOARD_NEOPIXEL_PIN
-  RGBLED_set_color(0x000000);
-#endif
+  LED_set_color(0x000000);
 }
 
 int tlf_fifo_task(void) {
@@ -155,11 +152,9 @@ int tlf_fifo_task(void) {
       // board_led_write(0);
   }
 
-#ifdef BOARD_NEOPIXEL_PIN
   if (data_send_complete > 0) {
-    RGBLED_set_color(0x110000);
+    LED_set_color(0x110000);
   }
-#endif
 
   return 0;
 }
@@ -170,9 +165,7 @@ void tlf_send_buffer(void) {
   uint16_t j=0; // loop counter for putting measurement data into output buffer
   uint16_t values_to_send = 0;
 
-#ifdef BOARD_NEOPIXEL_PIN
-  RGBLED_set_color(0x000055);
-#endif
+  LED_set_color(0x000055); // Blue while data is sent
 
   for (j=0; j < TLF_DATA_BUFFER_LENGTH; j++) {
 
@@ -190,23 +183,19 @@ void tlf_send_buffer(void) {
 
     send_buffer_counter += values_to_send;
 
-#ifdef BOARD_NEOPIXEL_PIN
-    RGBLED_set_color(0x000000);
+
+    LED_set_color(0x000000); // Set off for waiting to send more data
 
     if (send_buffer_counter >= samples)  {
-      RGBLED_set_color(0x110000);
+      LED_set_color(0x110000); // Set red for wait mode
     }
-#endif
-
 
 
   } else {
     data_send_complete = 1;
     tud_usbtmc_transmit_dev_msg_data(EOM_message, 0, true, false);
 
-#ifdef BOARD_NEOPIXEL_PIN
-    RGBLED_set_color(0x110000);
-#endif
+    LED_set_color(0x110000);
 
   }
 

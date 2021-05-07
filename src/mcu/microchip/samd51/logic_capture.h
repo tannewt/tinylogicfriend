@@ -25,6 +25,8 @@
 
 #include <stdint.h>
 
+void LED_set_color(uint32_t color);
+
 void logic_capture_init(void);
 void logic_capture_start(void);
 void logic_capture_stop(void);

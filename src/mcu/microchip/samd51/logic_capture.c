@@ -26,6 +26,14 @@ bool running = false;
 bool finished = false;
 
 
+
+void LED_set_color(uint32_t color) { // If the board has a Neopixel, call the color setter
+#ifdef BOARD_NEOPIXEL_PIN
+    RGBLED_set_color(color);
+#endif
+}
+
+
 // // // //   Tell linker to store these functions in RAM
 ///////////// This didn't seem to have any performance improvement on Cortex M4
 // #define RAMFUNC __attribute__((section(".ramfunc")))
@@ -99,9 +107,9 @@ void logic_capture_init(void) {
 
 void logic_capture_start(void) {
 
-#ifdef BOARD_NEOPIXEL_PIN
-    RGBLED_set_color(0x00FF00);
-#endif
+
+    LED_set_color(0x00FF00);
+
 
     // setup state variables and counters
 
@@ -177,9 +185,7 @@ void logic_capture_stop(void) {
     running = false;
     finished = true;
 
-#ifdef BOARD_NEOPIXEL_PIN
-    RGBLED_set_color(0x000000);
-#endif
+    LED_set_color(0x000000);
 
 }
 

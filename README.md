@@ -21,12 +21,17 @@ Make it easy to use a microcontroller board as a logic analyzer.
 - a basic communication protocol between sigrok and tinyLogicFriend to set up the instrument and to initiate and read measurements
 
 ## Using and hacking:
-1. Install the [sigrok suite](https://sigrok.org/wiki/Downloads).  This can be run at the command line using `sigrok-cli` or using the `PulseView` graphical interface.
-2. If your board is supported: Download the appropriate `.UF2` file.
-3. Connect your tinyLogicFriend to your host computer via USB (be sure you are using a USB cable with the signal lines connected).
-4. Put your board into bootloader mode (usually by double-clicking and copy the `.UF2` file to your board.
+1. Install the [sigrok suite](https://sigrok.org/wiki/Downloads). This can be run at the command line using `sigrok-cli` or using the `PulseView` graphical interface.  **You will need to get a version that includes the tinyLogicFriend sigrok driver. Right now, you need to build it for yourself using the tinyLogicFriend driver from my github [`libsigrok` repository](https://github.com/kmatch98/libsigrok)**.  I strongly recommend using **[sigrok-util](https://github.com/sigrokproject/sigrok-util) to build for your platform**.  You will need to replace the baseline `libsigrok` library with this version that includes the tinyLogicFriend driver.  Then build everything, including `libsigrok`, `sigrok-cli` and `PulseView`. So far, I have succesfully built PulseView with tinyLogicFriend on an iMac running MacOS Big Sur.
 
-5. Start up `sigrok-cli` or `PulseView` and confirm that your tinyLogicFriend is detected.
+2. If your board is supported: Download the appropriate `.UF2` file from the `\boards` directory.
+
+3. Connect your tinyLogicFriend to your host computer via USB (be sure you are using a USB cable with the signal lines connected).
+
+4. Put your board into bootloader mode (usually by double-clicking.
+
+5. Copy to your board the appropriate `.UF2` file (the one named the same as your board).
+
+6. Start up `sigrok-cli` or `PulseView` and confirm that your tinyLogicFriend is detected.
 
 ### If your board is not yet supported:
 1. Download the example file and update the following sections of these files according to your board's requirements:
